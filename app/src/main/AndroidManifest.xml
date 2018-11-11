@@ -7,11 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+
     <application
         android:name=".LeadApp"
         android:allowBackup="true"
@@ -36,10 +32,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".main.contacts.editcontact.EditContactActivity"
-            android:theme="@style/AppTheme.TextStyle">
-        </activity>
-
-        <service android:name=".CallRecorderService" android:enabled="true" />
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
 
         <receiver
             android:name=".CallReceiver"
@@ -57,7 +50,9 @@
         <activity
             android:name=".main.contacts.importcontact.ImportContactActivity"
             android:parentActivityName=".main.MainActivity" />
-        <activity android:name=".InfoSliderActivity"></activity>
+        <activity android:name=".InfoSliderActivity" />
+        <activity android:name=".utils.SignIn" />
+        <activity android:name=".SignUpActivity"></activity>
     </application>
 
 </manifest>

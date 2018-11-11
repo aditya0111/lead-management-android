@@ -32,6 +32,7 @@ import com.community.jboss.leadmanagement.main.contacts.ContactsFragment;
 import com.community.jboss.leadmanagement.main.contacts.editcontact.EditContactActivity;
 import com.community.jboss.leadmanagement.main.contacts.importcontact.ImportContactActivity;
 import com.community.jboss.leadmanagement.main.groups.GroupsFragment;
+import com.community.jboss.leadmanagement.utils.SignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -58,7 +59,7 @@ import static com.community.jboss.leadmanagement.SettingsActivity.PREF_DARK_THEM
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private int ID;
+    private final int ID = 512;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.fab)
@@ -113,8 +114,8 @@ public class MainActivity extends BaseActivity
 
         if(!isFirebaseAlreadyIntialized) {
             FirebaseApp.initializeApp(this, new FirebaseOptions.Builder()
-                    .setApiKey("YOUR_API_KEY")
-                    .setApplicationId("YOUR_APPLICATION_ID")
+                    .setApiKey(" AIzaSyB-rz2G2KzewomNHkyuVZG4vpToPdxK9AA ")
+                    .setApplicationId("1:855893698113:android:9dd99eb89b0017e8")
                     .setDatabaseUrl("YOUR_DB_URL")
                     .setGcmSenderId("YOUR_SENDER_ID")
                     .setStorageBucket("YOUR_STORAGE_BUCKET").build());
@@ -122,7 +123,7 @@ public class MainActivity extends BaseActivity
 
         
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("YOUR_REQUEST_ID_TOKEN")
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
@@ -131,10 +132,9 @@ public class MainActivity extends BaseActivity
 
 
         permissionManager = new PermissionManager(this, this);
-
-        ID = permissionManager.checkAndAskPermissions(Manifest.permission.READ_PHONE_STATE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.RECORD_AUDIO);
+        if (!permissionManager.permissionStatus(Manifest.permission.READ_PHONE_STATE)) {
+            permissionManager.requestPermission(ID, Manifest.permission.READ_PHONE_STATE);
+        }
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -266,6 +266,7 @@ public class MainActivity extends BaseActivity
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+
     }
     // [END on_start_check_user]
 
@@ -342,7 +343,6 @@ public class MainActivity extends BaseActivity
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         View header =  navigationView.getHeaderView(0);
-
         TextView mDetailTextView = header.findViewById(R.id.nav_detail);
         TextView mStatusTextView = header.findViewById(R.id.nav_status);
         CircularImageView mProfileImageView = header.findViewById(R.id.nav_prof_pic);
@@ -358,14 +358,15 @@ public class MainActivity extends BaseActivity
             header.findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             header.findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
         } else {
+            startActivity(new Intent(MainActivity.this,SignIn.class));
             Toast.makeText(getApplicationContext(), "Signed out", Toast.LENGTH_SHORT).show();
-
             mStatusTextView.setText(R.string.app_desc);
             mDetailTextView.setText(R.string.app_name);
             Glide.with(this).load("https://github.com/jboss-outreach/lead-management-android/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png?raw=true").into(mProfileImageView);
 
             header.findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             header.findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+            startActivity(new Intent(MainActivity.this, SignIn.class));
         }
     }
 
